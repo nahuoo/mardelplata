@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Boxes, GitBranch, ExternalLink, FileText } from "lucide-react";
+import Link from "next/link";
 import BottomSheet from "./BottomSheet";
 import {
   SheetHeaderSkeleton,
@@ -188,9 +189,10 @@ export default function ModuleSheet({ slug, onClose }: ModuleSheetProps) {
             </div>
           ) : (
             usages.map((u) => (
-              <div
+              <Link
                 key={u.project.id}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06]"
+                href={`/red?p=${u.project.slug}`}
+                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12] transition-colors"
               >
                 <GitBranch size={14} className="text-white/55" />
                 <div className="flex-1 min-w-0">
@@ -205,7 +207,7 @@ export default function ModuleSheet({ slug, onClose }: ModuleSheetProps) {
                     month: "short",
                   })}
                 </span>
-              </div>
+              </Link>
             ))
           )}
         </div>

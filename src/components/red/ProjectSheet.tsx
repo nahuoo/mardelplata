@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useCallback, type ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Eye,
   Users,
@@ -537,9 +538,10 @@ function ModulesTab({
         </div>
       ) : (
         usages.map((u) => (
-          <div
+          <Link
             key={u.module.id}
-            className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06]"
+            href={`/red/modulos?m=${u.module.slug}`}
+            className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12] transition-colors"
           >
             <Boxes size={14} className="text-white/55" />
             <div className="flex-1 min-w-0">
@@ -552,13 +554,17 @@ function ModulesTab({
             {canEdit && (
               <button
                 type="button"
-                onClick={() => onRemove(u.module.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRemove(u.module.id);
+                }}
                 className="text-white/45 hover:text-[#ff8aa8] text-[0.72rem] transition-colors"
               >
                 quitar
               </button>
             )}
-          </div>
+          </Link>
         ))
       )}
     </div>
