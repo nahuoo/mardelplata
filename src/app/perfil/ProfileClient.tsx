@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { listMyAttendances, type AttendedEvent } from "@/lib/events/queries";
 import {
   FLATICON_AVATARS,
   TECH_AVATARS,
@@ -41,7 +43,8 @@ export default function ProfileClient({ user, profile, onRefresh }: ProfileClien
   const [loading, setLoading] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [currentProfile, setCurrentProfile] = useState<Profile | null>(profile);
-  const [attendanceCount, setAttendanceCount] = useState(0);
+  const [attendances, setAttendances] = useState<AttendedEvent[]>([]);
+  const attendanceCount = attendances.length;
   const [activeLockedHint, setActiveLockedHint] = useState<number | null>(null);
   const [enforcingAvatar, setEnforcingAvatar] = useState(false);
   const [formData, setFormData] = useState({
@@ -78,33 +81,14 @@ export default function ProfileClient({ user, profile, onRefresh }: ProfileClien
   }, [currentProfile?.avatar_url, selectedAvatar, currentProfile?.full_name, formData.full_name, user.email]);
 
   useEffect(() => {
-    if (IS_MOCK) {
-      setAttendanceCount(3);
-      return;
-    }
     let cancelled = false;
-
-    const loadAttendance = async () => {
-      const { data, error } = await supabase
-        .from("event_attendance")
-        .select("event_id")
-        .eq("user_id", user.id);
-
-      if (cancelled) return;
-      if (error || !data) {
-        setAttendanceCount(0);
-        return;
-      }
-
-      const distinct = new Set(data.map((row) => row.event_id).filter(Boolean));
-      setAttendanceCount(distinct.size);
-    };
-
-    loadAttendance();
+    listMyAttendances(user.id).then((rows) => {
+      if (!cancelled) setAttendances(rows);
+    });
     return () => {
       cancelled = true;
     };
-  }, [supabase, user.id]);
+  }, [user.id]);
 
   useEffect(() => {
     if (IS_MOCK) return;
@@ -500,9 +484,60 @@ export default function ProfileClient({ user, profile, onRefresh }: ProfileClien
               </StaggerReveal>
             </div>
 
-            <div className="glass-night p-6 fade-up" style={{ animationDelay: "320ms" }}>
+            <div className="glass-night p-6 fade-up" style={{ animationDelay: "300ms" }}>
+              <p className="kicker text-white/40 mb-4 flex items-center gap-2">
+                <span className="dot-amber" /> / 03 · Eventos asistidos
+              </p>
+              {attendances.length === 0 ? (
+                <p className="text-white/55 text-sm font-light leading-relaxed">
+                  Cuando vayas a un evento y te escaneen el QR, va a quedar registrado acá.
+                </p>
+              ) : (
+                <ul className="space-y-3">
+                  {attendances.slice(0, 5).map((a) => {
+                    const e = a.event;
+                    if (!e) return null;
+                    const dateLabel = new Date(a.attendance.scanned_at).toLocaleDateString("es-AR", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    });
+                    const title = e.is_mystery ? e.codename ?? e.title : e.title;
+                    return (
+                      <li key={a.attendance.id}>
+                        <Link
+                          href={`/eventos/${e.slug}`}
+                          className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12] transition-colors"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="text-white/85 text-sm font-light truncate">
+                              {title}
+                            </p>
+                            {e.location && (
+                              <p className="text-white/40 text-[0.72rem] truncate">
+                                📍 {e.location}
+                              </p>
+                            )}
+                          </div>
+                          <span className="kicker text-white/45 shrink-0">
+                            {dateLabel}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              {attendances.length > 5 && (
+                <p className="text-white/40 text-[0.72rem] mt-3">
+                  + {attendances.length - 5} más
+                </p>
+              )}
+            </div>
+
+            <div className="glass-night p-6 fade-up" style={{ animationDelay: "360ms" }}>
               <p className="kicker text-white/40 mb-3 flex items-center gap-2">
-                <span className="dot-amber" /> / 03 · Carnet
+                <span className="dot-amber" /> / 04 · Carnet
               </p>
               <p className="text-white/65 text-sm font-light leading-relaxed mb-4">
                 Tu QR de miembro está disponible desde el sidebar — botón <span className="text-white">Mi QR</span>.
