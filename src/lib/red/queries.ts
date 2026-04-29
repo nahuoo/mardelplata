@@ -68,6 +68,22 @@ const MOCK_PROJECTS: ProjectCardData[] = [
     followers_count: 9,
     contributors_count: 2,
   },
+  {
+    id: "p-004",
+    slug: "erp",
+    name: "ERP",
+    description:
+      "Sistema de gestión open-source multi-tenant. Al crear cuenta elegís vertical: veterinaria, educación, laboratorio, growshop, hongos. Construido sobre módulos reusables que se van extrayendo hacia mardelplata-modules.",
+    status: "active",
+    repo_url: "https://github.com/nahuoo/mardelplata-erp",
+    demo_url: null,
+    is_public: true,
+    created_by: null,
+    created_at: "2026-04-01T00:00:00Z",
+    updated_at: "2026-04-28T00:00:00Z",
+    followers_count: 7,
+    contributors_count: 1,
+  },
 ];
 
 const MOCK_IDEAS: IdeaCardData[] = [
@@ -1073,6 +1089,38 @@ const MOCK_MODULES: ModuleCardData[] = [
     updated_at: "2026-04-02T00:00:00Z",
     usages_count: 0,
   },
+  {
+    id: "m-004",
+    slug: "vision",
+    name: "Vision",
+    description:
+      "Lee imágenes con un LLM y devuelve datos estructurados validados con Zod. Provider swappable (OpenRouter por default).",
+    kind: "integration",
+    version: "0.1.0",
+    source_url: "https://github.com/nahuoo/mardelplata-modules/tree/main/modules/vision",
+    license: "MIT",
+    is_public: true,
+    created_by: null,
+    created_at: "2026-04-20T00:00:00Z",
+    updated_at: "2026-04-28T00:00:00Z",
+    usages_count: 1,
+  },
+  {
+    id: "m-005",
+    slug: "facturacion-argentina",
+    name: "Facturación Argentina",
+    description:
+      "Emisión de comprobantes electrónicos para Argentina vía SOAP. Aún no implementado — entrada de catálogo para declarar uso desde proyectos.",
+    kind: "integration",
+    version: "0.0.1",
+    source_url: "https://github.com/nahuoo/mardelplata-modules/tree/main/modules/facturacion-argentina",
+    license: "MIT",
+    is_public: true,
+    created_by: null,
+    created_at: "2026-04-25T00:00:00Z",
+    updated_at: "2026-04-28T00:00:00Z",
+    usages_count: 1,
+  },
 ];
 
 const MOCK_MODULE_USAGES: ModuleUsage[] = [
@@ -1096,6 +1144,20 @@ const MOCK_MODULE_USAGES: ModuleUsage[] = [
     declared_by: mockProfiles[0].id,
     declared_at: "2026-03-22T00:00:00Z",
     note: null,
+  },
+  {
+    project_id: "p-004",
+    module_id: "m-004",
+    declared_by: mockProfiles[0].id,
+    declared_at: "2026-04-20T00:00:00Z",
+    note: "Lectura de comprobantes y documentos escaneados.",
+  },
+  {
+    project_id: "p-004",
+    module_id: "m-005",
+    declared_by: mockProfiles[0].id,
+    declared_at: "2026-04-25T00:00:00Z",
+    note: "Emisión de comprobantes electrónicos a clientes.",
   },
 ];
 
