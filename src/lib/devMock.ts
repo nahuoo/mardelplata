@@ -61,6 +61,7 @@ export const mockProfile = {
 export const mockEvents = [
   {
     id: "evt-001",
+    slug: "meetup-de-bienvenida",
     title: "Meetup de bienvenida",
     subtitle: "Charla abierta + networking",
     description: "Primer encuentro de la temporada en el faro.",
@@ -78,6 +79,7 @@ export const mockEvents = [
   },
   {
     id: "evt-002",
+    slug: "hack-night",
     title: "Hack night",
     subtitle: "Pair programming nocturno",
     description: "Traé tu laptop y un proyecto para mostrar.",
@@ -90,8 +92,37 @@ export const mockEvents = [
     is_mystery: false,
     codename: null,
     teaser: null,
-    is_published: false,
+    is_published: true,
     created_at: "2026-04-15T00:00:00.000Z",
+  },
+  {
+    id: "evt-003",
+    slug: "charla-rust-en-la-costa",
+    title: "Rust en la costa",
+    subtitle: "Charla técnica + Q&A",
+    description: "Introducción a Rust con ejemplos del mundo real, traída por la comunidad de Rust Argentina.",
+    date: "2026-03-08T19:00:00.000Z",
+    end_date: null,
+    location: "Espacio Cultural Estación Sur",
+    tags: ["charla", "rust"],
+    image_url: null,
+    registration_url: null,
+    is_mystery: false,
+    codename: null,
+    teaser: null,
+    is_published: true,
+    created_at: "2026-02-10T00:00:00.000Z",
+  },
+];
+
+export const mockAttendances = [
+  // Demo user asistió al evento de Rust (pasado).
+  {
+    id: "att-001",
+    event_id: "evt-003",
+    user_id: mockUser.id,
+    scanned_at: "2026-03-08T19:14:00.000Z",
+    scanned_by: mockUser.id,
   },
 ];
 

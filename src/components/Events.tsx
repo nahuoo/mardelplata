@@ -1,7 +1,11 @@
+"use client";
+
+import Link from "next/link";
 import { FishSchool } from "./OceanDoodles";
 
 interface Event {
   id: string;
+  slug: string;
   title: string;
   subtitle: string | null;
   description: string | null;
@@ -14,6 +18,12 @@ interface Event {
   codename: string | null;
   teaser: string | null;
   is_published: boolean;
+}
+
+function openExternal(e: React.MouseEvent, url: string) {
+  e.preventDefault();
+  e.stopPropagation();
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 interface EventsProps {
@@ -130,7 +140,10 @@ export default function Events({ events }: EventsProps) {
 function FeaturedEvent({ event }: { event: Event }) {
   const past = isPast(event.date);
   return (
-    <article className="relative overflow-hidden rounded-[32px] event-header-hackathon text-white p-10 md:p-14">
+    <Link
+      href={`/eventos/${event.slug}`}
+      className="block relative overflow-hidden rounded-[32px] event-header-hackathon text-white p-10 md:p-14 hover:scale-[1.005] transition-transform"
+    >
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <div className="relative grid grid-cols-12 gap-8 items-end">
         <div className="col-span-12 md:col-span-8">
@@ -175,29 +188,31 @@ function FeaturedEvent({ event }: { event: Event }) {
               {formatFullDate(event.date)}
             </p>
             {event.registration_url && !past && (
-              <a
-                href={event.registration_url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={(e) => openExternal(e, event.registration_url!)}
                 className="cta-primary"
               >
                 Registrarme
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M5 12h14M13 5l7 7-7 7" />
                 </svg>
-              </a>
+              </button>
             )}
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
 function CompactEvent({ event }: { event: Event }) {
   const past = isPast(event.date);
   return (
-    <article className="bento-card p-7">
+    <Link
+      href={`/eventos/${event.slug}`}
+      className="block bento-card p-7 hover:scale-[1.01] transition-transform"
+    >
       <div className="flex items-center gap-2 mb-4">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-ocean-50 text-ocean-700 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.16em]">
           {past ? "✓ Finalizado" : formatBadge(event.date)}
@@ -218,19 +233,18 @@ function CompactEvent({ event }: { event: Event }) {
         </p>
       )}
       {event.registration_url && !past && (
-        <a
-          href={event.registration_url}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={(e) => openExternal(e, event.registration_url!)}
           className="mt-5 inline-flex items-center gap-1.5 text-ocean-600 hover:text-ocean-700 text-sm font-semibold"
         >
           Registrarme
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </a>
+        </button>
       )}
-    </article>
+    </Link>
   );
 }
 
